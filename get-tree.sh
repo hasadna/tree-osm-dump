@@ -1,10 +1,10 @@
 #!/bin/bash
 set -uo pipefail
 TREE_NAME="$1"
-CURL_OUT="$(curl -sS 'https://overpass-api.de/api/interpreter' --data '[out:json];node["highway"~"living_street|pedestrian|residential"](around:10);node[natural=tree][species="'"$TREE_NAME"'"];out ;')"
+CURL_OUT="$(curl -sS 'https://overpass-api.de/api/interpreter' --data '[out:json];node(30,-180,45,180)["highway"~"living_street|pedestrian|residential"](around:10);node[natural=tree][species="'"$TREE_NAME"'"]["check_date"];out 15;')"
 EX="$?"
-echo "$CURL_OUT"
-if [[ "$EX" != "0" ]] || ! (echo "$CURL_OUT" | jq . >/dev/null); then
+# echo "$CURL_OUT"
+if [[ "$EX" != "0" ]] || ! (echo "$CURL_OUT" | jq . &>/dev/null); then
   echo "error"
   echo "$CURL_OUT"  | head -n30 >&2
   exit $EX
